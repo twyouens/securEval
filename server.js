@@ -7,6 +7,8 @@ dotenvExpand.expand(config);
 
 const apiRouter = require("./src/routes/api.v1");
 const connect = require('./src/services/db.service');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1", apiRouter);
 connect();
