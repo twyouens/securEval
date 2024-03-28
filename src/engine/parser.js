@@ -1,6 +1,6 @@
 class Parser {
-    constructor(ruleJson) {
-        this.ruleJson = ruleJson;
+    constructor(ruleObject) {
+        this.ruleJson = ruleObject;
     }
 
     parse() {
@@ -12,13 +12,13 @@ class Parser {
             targets: this.ruleJson.targets,
             facts: this.ruleJson.facts,
             outcomes: this.parseOutcomes(this.ruleJson.outcomes),
-            outcomeRanking: this.ruleJson['outcome-ranking']
+            outcomeRanking: this.ruleJson['outcomeRanking']
         };
         return rule;
     }
 
     validateRuleJson() {
-        const requiredTopLevelFields = ['name', 'version', 'description', 'facts', 'targets', 'outcomes', 'outcome-ranking'];
+        const requiredTopLevelFields = ['name', 'version', 'description', 'facts', 'targets', 'outcomes', 'outcomeRanking'];
         requiredTopLevelFields.forEach(field => {
           if (!this.ruleJson.hasOwnProperty(field)) {
             throw new Error(`Rule JSON is missing required field: ${field}`);
