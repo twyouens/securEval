@@ -5,6 +5,7 @@ const { checkAPIKey } = require("../middleware/auth");
 const apiAuthenticatedRouter = express.Router();
 apiAuthenticatedRouter.use(checkAPIKey);
 
+apiAuthenticatedRouter.get("/rules", apiAuthenticatedController.getRules);
 apiAuthenticatedRouter.get("/rule/:ruleID", apiAuthenticatedController.getRule);
 
 module.exports = apiAuthenticatedRouter;
