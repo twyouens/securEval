@@ -14,6 +14,13 @@ async function getRule(req, res, next) {
     res.json(parsedRule);
 }
 
+async function getRules(req, res, next) {
+    const rules = await Rule.find({tenant: req.token.tenant},null,{lean: true}).select('name tenant description version created updated targets');
+    res.json(rules);
+}
+
+
 module.exports = {
-    getRule
+    getRule,
+    getRules
 };
