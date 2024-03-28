@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ConditionSchema = new Schema({
-    fact: { type: String, required: true },
+    fact: { type: String, required: false },
     operator: { type: String, required: true },
-    value: { type: Schema.Types.Mixed, required: true }
+    value: { type: Schema.Types.Mixed, required: false, default: null },
 });
 
 // Define a schema for outcomes
@@ -26,7 +26,7 @@ const RuleSchema = new Schema({
     targets: [{ type: String, required: false }], 
     facts: [{
         name: { type: String, required: true },
-        value: { type: Schema.Types.Mixed, required: true },
+        value: { type: Schema.Types.Mixed, required: false },
         type: { type: String, required: true },
         source: { type: String, required: true }
     }],
