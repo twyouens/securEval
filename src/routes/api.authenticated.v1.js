@@ -7,5 +7,6 @@ apiAuthenticatedRouter.use(checkAPIKey);
 
 apiAuthenticatedRouter.get("/rules", apiAuthenticatedController.getRules);
 apiAuthenticatedRouter.get("/rule/:ruleID", apiAuthenticatedController.getRule);
+apiAuthenticatedRouter.post("/rule/:ruleID/evaluate", apiAuthenticatedController.evaluateRule);
 
 module.exports = apiAuthenticatedRouter;
