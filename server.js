@@ -5,6 +5,8 @@ const dotenvExpand = require('dotenv-expand');
 const config = dotenv.config();
 dotenvExpand.expand(config);
 
+const logger = require('./src/services/logger.service');
+app.use(logger);
 const apiRouter = require("./src/routes/api.v1");
 const connect = require('./src/services/db.service');
 app.use(express.json());
