@@ -4,18 +4,12 @@ const Facter = require('./facter');
 const Evaluator = require('./evaluator');
 
 class Coordinator {
-  constructor(rulePath) {
-    this._rulePath = rulePath;
+  constructor() {
     this.rules = [];
     this.facts = {};
   }
-
-  loadRule(){
-    const ruleJson = JSON.parse(fs.readFileSync(this._rulePath));
-    this.parseRules(ruleJson);
-  }
-  parseRules(ruleJson) {
-    const parser = new Parser(ruleJson);
+  parseRule(ruleObject) {
+    const parser = new Parser(ruleObject);
     this.rules.push(parser.parse());
   }
   getRules() {
