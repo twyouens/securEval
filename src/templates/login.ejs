@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head'); %>
+    <title>Sign In - SecurEval</title>
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+    <div class="central h-100">
+        <div class="middle">
+            <div class="content">
+                <img src="/static/logo.svg" class="mainImgIcon">
+                <hr>
+                <h3>Sign In</h3>
+                <form action="/login" method="POST">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="someone@email.com" required>
+                                <label for="email">Email address</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                                <label for="password">Password</label>
+                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <a href="/reset-password">Forgot password?</a>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <input type="submit" class="btn btn-primary" value="Sign In">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <%- include('./partials/footer'); %>
+</body>
