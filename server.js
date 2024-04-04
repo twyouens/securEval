@@ -11,11 +11,12 @@ app.use(logger);
 const apiRouter = require("./src/routes/api.v1");
 const connect = require('./src/services/db.service');
 const webRouter = require("./src/routes/web");
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const bp = require('body-parser');
 
 app.set('views', path.join(__dirname, process.env.TEMPLATE_DIR)); 
 app.set('view engine', 'ejs');
+app.use(bp.json());
+app.use(bp.urlencoded({ extended: true }));
 
 app.use("/api/v1", apiRouter);
 app.use("/", webRouter);
