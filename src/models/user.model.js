@@ -7,6 +7,7 @@ const SALT_WORK_FACTOR = 10;
 const UserSchema = new Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    name: { type: String, required: true },
     tenant: { type: Schema.Types.ObjectId, ref: 'Tenant', required: true },
     roles: [{ type: String }],
     isActive: { type: Boolean, default: true },
