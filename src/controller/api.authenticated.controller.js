@@ -1,6 +1,8 @@
 const Rule = require('../models/rule.model');
 const Coordinator = require('../engine/coordinator');
 const Parser = require('../engine/parser');
+const User = require('../models/user.model');
+const Tenant = require('../models/tenant.model');
 const {checkEvalRequestFacts} = require('../helpers/request.helper');
 
 async function getRule(req, res, next) {
@@ -35,8 +37,73 @@ async function evaluateRule(req, res, next) {
     });
 }
 
+async function createRule(req, res, next) {
+    const newRule = {
+        name: req.body.name,
+        description: req.body.description,
+        version: "1.0",
+        tenant: req.token.tenant,
+        targets: [],
+        outcomes: {
+            allowed: {
+                conditions: {
+                    all: [],
+                    any: []
+                }
+            },
+            "additional-information": {
+                conditions: {
+                    all: [],
+                    any: []
+                }
+            },
+            denied: {
+                conditions: {
+                    all: [],
+                    any: []
+                }
+            }
+        }
+    };
+    const rule = new Rule(newRule);
+    try {
+        await rule.save();
+        res.json(rule);
+    } catch (err) {
+        req.log.error({err: err, detail: "Error saving rule", data: {newRule: newRule}}, "Internal Server Error");
+        next(err);
+    }
+}
+
+async function getMyTenant (req, res, next) {
+    const tenant = await Tenant.findOne({_id: req.token.tenant});
+    if(!tenant){
+        return res.status(404).json({message: 'Tenant not found'});
+    }
+    res.json(tenant);
+}
+
+async function getTenantUsers (req, res, next) {
+    const users = await User.find({tenant: req.token.tenant}).select('username email name role isActive createdAt updatedAt');
+    res.json(users);
+}
+
+async function getTenantUser (req, res, next) {
+    const userID = req.params.userID;
+    const user = await User.findOne({_id: userID, tenant: req.token.tenant}).select('username email name role isActive createdAt updatedAt');
+    if(!user){
+        return res.status(404).json({message: 'User not found'});
+    }
+    res.json(user);
+}
+
+
 module.exports = {
     getRule,
     getRules,
-    evaluateRule
+    evaluateRule,
+    getMyTenant,
+    createRule,
+    getTenantUsers,
+    getTenantUser
 };
