@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
+const JWT = require('jsonwebtoken');
 
 const SALT_WORK_FACTOR = 10;
 
@@ -36,12 +37,27 @@ UserSchema.pre('save', function(next) {
     });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-        if (err) return cb(err);
-        cb(null, isMatch);
+UserSchema.methods.comparePassword = function(candidatePassword) {
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+            if (err) reject(err);
+            resolve(isMatch);
+        });
     });
 };
+
+UserSchema.methods.createJWTToken = function() {
+    return JWT.sign({
+        exp: Math.floor(Date.now() / 1000) + parseInt(process.env.JWT_EXPIRY),
+        data: {
+            _id: this._id,
+            username: this.username,
+            name: this.name,
+            tenant: this.tenant,
+            roles: this.roles
+        }
+    }, process.env.JWT_SECRET);
+}
 
 const User = mongoose.model('User', UserSchema);
 
