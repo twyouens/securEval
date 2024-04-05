@@ -1,5 +1,7 @@
 const APIKey = require('../models/apiKey.model');
-const logger = require('../services/logger.service');
+const User = require('../models/user.model');
+const Tenant = require('../models/tenant.model');
+const JWT = require('jsonwebtoken');
 
 async function checkAPIKey(req, res, next) {
     if(!req.headers.authorization){
@@ -30,4 +32,35 @@ async function checkAPIKey(req, res, next) {
     next();
 }
 
-module.exports = {checkAPIKey};
+async function checkUserToken(req, res, next) {
+    if(!req.cookies.token){
+        return res.redirect('/login');
+    }
+    const token = req.cookies.token;
+    try{
+        var decoded = JWT.verify(token, process.env.JWT_SECRET);
+        req.token = decoded;
+    }catch(err){
+        req.log.warn({err: "Unauthorized Request", detail: "Invalid Token"}, "Unauthorized Request");
+        return res.redirect('/login');
+    }
+    next();
+}
+
+async function addUserSessionData(req, res, next) {
+    if(req.token){
+        req.session = {};
+        const user = await User.findById(req.token.data._id).select('username name role isActive createdAt updatedAt');
+        if(user){
+            req.session['user'] = user;
+        }
+        const tenant = await Tenant.findById(req.token.data.tenant);
+        if(tenant){
+            req.session['tenant'] = tenant;
+        }
+    }
+    next();
+}
+
+
+module.exports = {checkAPIKey, checkUserToken, addUserSessionData};
