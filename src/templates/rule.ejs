@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+        <title>Rules - SecurEval</title>
+        <link rel="stylesheet" href="/static/login.css">
+    </head>
+    <body>
+        <%- include('./partials/nav-start'); %>
+            <div class="row">
+                <div class="col-12">
+                    <h3><a href="/rules">&#xe235;</a> Rule</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <h3><%= rule.name %></h3>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">Overview</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="facts-tab" data-bs-toggle="tab" data-bs-target="#facts-tab-pane" type="button" role="tab" aria-controls="facts-tab-pane" aria-selected="false">Facts</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="conditions-tab" data-bs-toggle="tab" data-bs-target="#conditons-tab-pane" type="button" role="tab" aria-controls="conditions-tab-pane" aria-selected="false">Conditions</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overivew-tab" tabindex="0">
+                                    <%- include('./partials/rule-overview'); %>
+                                </div>
+                                <div class="tab-pane fade" id="facts-tab-pane" role="tabpanel" aria-labelledby="facts-tab" tabindex="0">
+                                    <p>Facts</p>
+                                </div>
+                                <div class="tab-pane fade" id="conditions-tab-pane" role="tabpanel" aria-labelledby="conditions-tab" tabindex="0">
+                                    <p>Conditions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <%- include('./partials/nav-end'); %>
+        <%- include('./partials/footer'); %>
+    </body>
+</html>
