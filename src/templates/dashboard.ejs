@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+        <title>Dashboard - SecurEval</title>
+        <link rel="stylesheet" href="/static/login.css">
+    </head>
+    <body>
+        <%- include('./partials/nav-start'); %>
+            <div class="row">
+                <div class="col-12">
+                    <p class="fs-4">Welcome, <%= session.user.name %></p>
+                    <h3><%= session.tenant.name %> Dashboard</h3>
+                </div>
+            </div>
+        <%- include('./partials/nav-end'); %>
+        <%- include('./partials/footer'); %>
+    </body>
+</html>
