@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+        <title>Rules - SecurEval</title>
+        <link rel="stylesheet" href="/static/login.css">
+    </head>
+    <body>
+        <%- include('./partials/nav-start'); %>
+            <div class="row">
+                <div class="col-12">
+                    <h3>Rules</h3>
+                    <p>Rules allow you to apply variable access controls to keep your systems and users secure.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <% if (rules.length > 0) { %>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Rule Name</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Last Modified</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% rules.forEach(rule => { %>
+                                    <tr>
+                                        <td><%= rule.name %></td>
+                                        <td><%= rule.status %></td>
+                                        <td><%= rule.updatedAt %></td>
+                                        <td>
+                                            <a href="/rule/<%= rule._id %>" class="btn btn-brand">Edit</a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p>No rules found.</p>
+                    <% } %>
+                </div>
+            </div>
+        <%- include('./partials/nav-end'); %>
+        <%- include('./partials/footer'); %>
+    </body>
+</html>
