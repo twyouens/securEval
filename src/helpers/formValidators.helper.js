@@ -7,12 +7,12 @@ function validateRuleForm(requestBody){
         return {input: invalidKeys[0], message: "Invalid key"};
     }
     if(requestBody.name){
-        if(!/^[a-z0-9 \-_.]{1,60}$/.test(requestBody.name)){
+        if(!(/^[a-zA-Z0-9 \-_.]{1,60}$/.test(requestBody.name))){
             return {input: "name", message: "Invalid name"};
         }
     }
     if(requestBody.description){
-        if(!/^[a-z0-9 \-_.]{1,150}$/.test(requestBody.description)){
+        if(!/^[a-zA-Z0-9 \-_.]{1,150}$/.test(requestBody.description)){
             return {input: "description", message: "Invalid description"};
         }
     }
@@ -43,3 +43,7 @@ function validateRuleForm(requestBody){
     }
     return true;
 }
+
+module.exports = {
+    validateRuleForm
+};
