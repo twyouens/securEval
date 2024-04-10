@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-12">
+        <h3>Rule Conditions</h3>
+        <p>Rule conditions are the conditions that must be met for a rule to be applied.</p>
+    </div>
+</div>
+<input type="hidden" id="ruleOutcomesData" value='<%- JSON.stringify(rule.outcomes) %>'>
+<div id="ruleOutcomes">
+    <button class="btn btn-brand" onclick="javascript: renderRuleConditions();">Render</button>
+</div>
+<script id="ruleConditionsTemplate" type="text/x-handlebars-template">
+    {{#eachKeyValue outcomes}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>{{key}}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="conditionsAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}All" aria-expanded="true" aria-controls="panelAll">
+                                    Match: ALL
+                                    </button>
+                                </h2>
+                                <div id="panel{{key}}All" class="accordion-collapse collapse show">
+                                    <div class="accordion-body">
+                                        {{#if (compare value.conditions.all.length '>' 0)}}
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fact</th>
+                                                        <th>Operator</th>
+                                                        <th>Value</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{#each value.conditions.all}}
+                                                        <tr>
+                                                            <td>{{this.fact}}</td>
+                                                            <td>{{this.operator}}</td>
+                                                            <td>{{this.value}}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition(this)">Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}Any" aria-expanded="false" aria-controls="panelAny">
+                                    Match: ANY
+                                    </button>
+                                </h2>
+                                <div id="panel{{key}}Any" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        {{#if (compare value.conditions.any.length '>' 0)}}
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fact</th>
+                                                        <th>Operator</th>
+                                                        <th>Value</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{#each value.conditions.any}}
+                                                        <tr>
+                                                            <td>{{this.fact}}</td>
+                                                            <td>{{this.operator}}</td>
+                                                            <td>{{this.value}}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition(this)">Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/eachKeyValue}}
+</script>
