@@ -1,15 +1,17 @@
 <div class="row">
     <div class="col-12">
-        <form>
+        <form action="javascript: updateRuleBasicForm();" id="ruleBasicForm">
             <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
-                        <label for="ruleTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="ruleTitle" name="ruleTitle" placeholder="My Rule" value="<%= rule.name %>">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="My Rule" value="<%= rule.name %>">
+                        <div class="invalid-feedback" id="nameFeedback"></div>
                     </div>
                     <div class="mb-3">
                         <label for="ruleDescription" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="ruleDescription" name="ruleDescription" placeholder="My Rule is superb" value="<%= rule.description %>">
+                        <input type="text" class="form-control" id="description" name="description" placeholder="My Rule is superb" value="<%= rule.description %>">
+                        <div class="invalid-feedback" id="descriptionFeedback"></div>
                     </div>
                 </div>
             </div>
