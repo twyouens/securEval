@@ -9,7 +9,7 @@
         <%- include('./partials/nav-start'); %>
             <div class="row">
                 <div class="col-12">
-                    <h3><a href="/rules">&#xe235;</a> Rule</h3>
+                    <h3><a href="/rules" class="text-decoration-none">&#x2190;</a> Rule</h3>
                 </div>
             </div>
             <div class="row">
@@ -17,6 +17,7 @@
                     <div class="card border-0">
                         <div class="card-body">
                             <h3><%= rule.name %></h3>
+                            <input type="hidden" name="ruleId" id="ruleId" value="<%= rule.id %>">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                   <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">Overview</button>
@@ -25,7 +26,7 @@
                                   <button class="nav-link" id="facts-tab" data-bs-toggle="tab" data-bs-target="#facts-tab-pane" type="button" role="tab" aria-controls="facts-tab-pane" aria-selected="false">Facts</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                  <button class="nav-link" id="conditions-tab" data-bs-toggle="tab" data-bs-target="#conditons-tab-pane" type="button" role="tab" aria-controls="conditions-tab-pane" aria-selected="false">Conditions</button>
+                                  <button class="nav-link" id="conditions-tab" data-bs-toggle="tab" data-bs-target="#conditions-tab-pane" type="button" role="tab" aria-controls="conditions-tab-pane" aria-selected="false">Conditions</button>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
@@ -33,16 +34,33 @@
                                     <%- include('./partials/rule-overview'); %>
                                 </div>
                                 <div class="tab-pane fade" id="facts-tab-pane" role="tabpanel" aria-labelledby="facts-tab" tabindex="0">
-                                    <p>Facts</p>
+                                    <%- include('./partials/rule-facts'); %>
                                 </div>
                                 <div class="tab-pane fade" id="conditions-tab-pane" role="tabpanel" aria-labelledby="conditions-tab" tabindex="0">
-                                    <p>Conditions</p>
+                                    <%- include('./partials/rule-conditions'); %>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="ruleModal" tabindex="-1" aria-labelledby="ruleModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="ruleModalTitle">Rule</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="ruleModalBody">
+                        
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <script src="/static/js/manageRule.js"></script>
         <%- include('./partials/nav-end'); %>
         <%- include('./partials/footer'); %>
     </body>
