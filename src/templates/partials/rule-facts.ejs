@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-10">
+        <h3>Rule Facts</h3>
+        <p>Rule facts are the conditions that must be met for a rule to be applied.</p>
+    </div>
+    <div class="col-2">
+        <button type="button" class="btn btn-brand">Add Fact</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <% if (rule.facts.length > 0) { %>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Fact Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Source</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% rule.facts.forEach(fact => { %>
+                        <tr>
+                            <td><%= fact.name %></td>
+                            <td><%= fact.type %></td>
+                            <td><%= fact.source %></td>
+                            <td>
+                                <button type="button" class="btn btn-brand" onclick="javascript: modalRuleFact('<%= fact._id %>');">Edit</button>
+                                <button type="button" class="btn btn-danger">Delete</button
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No facts found.</p>
+        <% } %>
+    </div>
+</div>
+<%- include('./modal-rule-fact'); %>
