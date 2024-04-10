@@ -1,0 +1,76 @@
+<script id="ruleFactModalTemplate" type="text/x-handlebars-template">
+    <form id="modalRuleFact">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group mb-2">
+                    <label for="ruleFact">Fact Name</label>
+                    <input type="text" class="form-control" id="factName" name="name" placeholder="Fact Name" value="{{fact.name}}">
+                </div>
+                <div class="form-group mb-2">
+                    <label for="ruleFact">Fact Type</label>
+                    <select class="form-control" id="factType" name="type">
+                        <option value="string" {{optionSelected fact.type "string"}}>String</option>
+                        <option value="number" {{optionSelected fact.type "number"}}>Number</option>
+                        <option value="boolean" {{optionSelected fact.type "boolean"}}>Boolean</option>
+                        <option value="timeFrame" {{optionSelected fact.type "timeFrame"}}>Time Frame</option>
+                        <option value="array" {{optionSelected fact.type "array"}}>Array (List)</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="ruleFact">Fact Source</label>
+                    <select class="form-control" id="factSource" name="source">
+                        <option value="" disabled>Please Select</option>
+                        <option value="request" {{optionSelected fact.source "request"}}>Request</option>
+                        <option value="static" {{optionSelected fact.source "static"}}>Static</option>
+                    </select>
+                </div>
+            </div>
+            {{#if (compare fact.source '==' "static")}}
+                {{#if (compare fact.type '==' "array")}}
+                    <div class="mb-2">
+                        <div id="itemsList">
+                            <ul class="list-group">
+                                {{#each fact.value}}
+                                    <li class="list-group-item">
+                                        {{this}}
+                                        <button type="button" class="btn btn-sm btn-brand float-end" onclick="editItem(this)">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-danger float-end" onclick="removeItem(this)">Remove</button>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                            <button type="button" class="btn btn-brand btn-sm" onclick="addItem()">Add New Item</button>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#if (compare fact.type '==' "string")}}
+                    <div class="form-group mb-2">
+                        <label for="ruleFact">Fact Value</label>
+                        <input type="text" class="form-control" id="factValue" name="value" placeholder="Fact Value" value="{{fact.value}}">
+                    </div>
+                {{/if}}
+                {{#if (compare fact.type '==' "number")}}
+                    <div class="form-group mb-2">
+                        <label for="ruleFact">Fact Value</label>
+                        <input type="number" class="form-control" id="factValue" name="value" placeholder="Fact Value" value="{{fact.value}}">
+                    </div>
+                {{/if}}
+                {{#if (compare fact.type '==' "boolean")}}
+                    <div class="form-group mb-2">
+                        <label for="ruleFact">Fact Value</label>
+                        <select class="form-control" id="factValue" name="value">
+                            <option value="true" {{optionSelected fact.value "true"}}>True</option>
+                            <option value="false" {{optionSelected fact.value "false"}}>False</option>
+                        </select>
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                     <button type="submit" class="btn btn-brand">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
