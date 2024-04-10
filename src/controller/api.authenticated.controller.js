@@ -4,10 +4,11 @@ const Parser = require('../engine/parser');
 const User = require('../models/user.model');
 const Tenant = require('../models/tenant.model');
 const {checkEvalRequestFacts} = require('../helpers/request.helper');
+const {validateRuleForm} = require('../helpers/formValidators.helper');
 
 async function getRule(req, res, next) {
     const ruleID = req.params.ruleID;
-    const rule = await Rule.findOne({_id: ruleID, tenant: req.token.tenant},null,{lean: true});
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id},null,{lean: true});
     if(!rule){
         return res.status(404).json({message: 'Rule not found'});
     }
@@ -17,13 +18,13 @@ async function getRule(req, res, next) {
 }
 
 async function getRules(req, res, next) {
-    const rules = await Rule.find({tenant: req.token.tenant},null,{lean: true}).select('name tenant description version created updated targets');
+    const rules = await Rule.find({tenant: req.session.tenant._id},null,{lean: true}).select('name tenant description version created updated targets');
     res.json(rules);
 }
 
 async function evaluateRule(req, res, next) {
     const ruleID = req.params.ruleID;
-    const rule = await Rule.findOne({_id: ruleID, tenant: req.token.tenant},null,{lean: true});
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id},null,{lean: true});
     if(!rule){
         return res.status(404).json({message: 'Rule not found'});
     }
@@ -42,7 +43,7 @@ async function createRule(req, res, next) {
         name: req.body.name,
         description: req.body.description,
         version: "1.0",
-        tenant: req.token.tenant,
+        tenant: req.session.tenant._id,
         targets: [],
         outcomes: {
             allowed: {
@@ -76,7 +77,7 @@ async function createRule(req, res, next) {
 }
 
 async function getMyTenant (req, res, next) {
-    const tenant = await Tenant.findOne({_id: req.token.tenant});
+    const tenant = await Tenant.findOne({_id: req.session.tenant._id});
     if(!tenant){
         return res.status(404).json({message: 'Tenant not found'});
     }
@@ -84,18 +85,56 @@ async function getMyTenant (req, res, next) {
 }
 
 async function getTenantUsers (req, res, next) {
-    const users = await User.find({tenant: req.token.tenant}).select('username email name role isActive createdAt updatedAt');
+    const users = await User.find({tenant: req.session.tenant._id}).select('username email name role isActive createdAt updatedAt');
     res.json(users);
 }
 
 async function getTenantUser (req, res, next) {
     const userID = req.params.userID;
-    const user = await User.findOne({_id: userID, tenant: req.token.tenant}).select('username email name role isActive createdAt updatedAt');
+    const user = await User.findOne({_id: userID, tenant: req.session.tenant._id}).select('username email name role isActive createdAt updatedAt');
     if(!user){
         return res.status(404).json({message: 'User not found'});
     }
     res.json(user);
 }
+
+async function updateRule(req, res, next) {
+    const ruleID = req.params.ruleID;
+    console.log(req.token)
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id});
+    if(!rule){
+        return res.status(404).json({message: 'Rule not found'});
+    }
+    const formErrors = validateRuleForm(req.body);
+    if(formErrors != true){
+        return res.status(400).json({message: 'Invalid form data', errors: formErrors});
+    }
+    try{
+        const updatedRule = await Rule.findByIdAndUpdate(ruleID, req.body, {new: true});
+        // const parser = new Parser(updatedRule);
+        // let parsedRule = parser.parse();
+        return res.json(updatedRule);
+    } catch (err) {
+        req.log.error({err: err, detail: "Error updating rule", data: {ruleID: ruleID, updateData: req.body}}, "Internal Server Error");
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+}
+
+async function getRuleFact (req, res, next) {
+    const ruleID = req.params.ruleID;
+    const factID = req.params.factID;
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id});
+    if(!rule){
+        return res.status(404).json({message: 'Rule not found'});
+    }
+    const fact = rule.facts.id(factID);
+    if(!fact){
+        return res.status(404).json({message: 'Fact not found'});
+    }
+    res.json(fact);
+}
+    
+
 
 
 module.exports = {
@@ -105,5 +144,7 @@ module.exports = {
     getMyTenant,
     createRule,
     getTenantUsers,
-    getTenantUser
+    getTenantUser,
+    updateRule,
+    getRuleFact
 };
