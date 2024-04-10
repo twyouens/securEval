@@ -10,6 +10,8 @@ apiAuthenticatedRouter.use(checkAPIKey);
 apiAuthenticatedRouter.get("/rules", apiAuthenticatedController.getRules);
 apiAuthenticatedRouter.post("/rule", apiAuthenticatedController.createRule);
 apiAuthenticatedRouter.get("/rule/:ruleID", apiAuthenticatedController.getRule);
+apiAuthenticatedRouter.put("/rule/:ruleID", apiAuthenticatedController.updateRule);
+apiAuthenticatedRouter.get("/rule/:ruleID/fact/:factID", apiAuthenticatedController.getRuleFact);
 apiAuthenticatedRouter.post("/rule/:ruleID/evaluate", apiAuthenticatedController.evaluateRule);
 
 //tenants
