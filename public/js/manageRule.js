@@ -176,7 +176,11 @@ const convertRowToForm = (row) => {
     factCell.html(`<select class='form-control fact-select'><option disabled>Select Fact</option><option value='${condition.fact}' selected>${condition.fact}</option></select>`);
     const conditionOperator = renderFromTemplate('conditionOperatorSelectTemplate', {operator: condition.operator});
     $row.find("td:nth-child(2)").html(conditionOperator);
-    $row.find("td:nth-child(3)").html(`<input type='text' value='${condition.value}' class='form-control'/>`);
+    const valueCell = $row.find('td').eq(2);
+    let valueSelectHtml = `<select class='form-control value-select'><option disabled>Select Value</option><option value='other'>Other</option></select><input type='text' class='form-control value-text' style='display:none;' value='${condition.value}' />`;
+    valueCell.html(valueSelectHtml);
+    let valueSelect = valueCell.find('.value-select');
+    populateValueOptions(valueSelect, condition);
     const $editBtn = $row.find('.btnEditRow');
     $editBtn.text('Save').off('click').on('click', function(event) {
         // Prevent the row click event from firing when clicking the button
@@ -185,6 +189,16 @@ const convertRowToForm = (row) => {
     });
     factCell.find('.fact-select').one('click', function() {
         populateFactOptions($(this), condition);
+    });
+    valueCell.find('.value-select').one('click', function() {
+        populateValueOptions($(this), condition);
+    });
+    valueCell.find('.value-select').change(function() {
+        if ($(this).val() === 'other') {
+          $(this).siblings('.value-text').show();
+        } else {
+          $(this).siblings('.value-text').hide();
+        }
     });
 }
 
@@ -200,4 +214,23 @@ const populateFactOptions = (select,currentCondition) => {
     ruleFacts.forEach(function(fact) {
         select.append(new Option(fact.source+"-"+fact.name, fact.id, false, (fact.source+"-"+fact.name == currentCondition.fact)));
     });
+};
+
+const populateValueOptions = (select,currentCondition) => {
+    let valueExistsInFacts = false;
+    select.find('option:gt(1)').remove();
+    ruleFacts.forEach(function(fact) {
+        let optionFact = "["+fact.source+"-"+fact.name+"]";
+        select.append(new Option(optionFact, optionFact,false, (optionFact == currentCondition.value)));
+        if (optionFact == currentCondition.value) {
+            valueExistsInFacts = true;
+        }
+    });
+    if (!valueExistsInFacts && currentCondition.value) {
+        select.val('other');
+        select.siblings('.value-text').val(currentCondition.value).show();
+    }else{
+        select.val(currentCondition.value);
+        select.siblings('.value-text').hide();
+    }
 };
