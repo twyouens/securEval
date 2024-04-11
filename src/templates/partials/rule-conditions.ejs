@@ -20,11 +20,11 @@
                         <div class="accordion" id="conditionsAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}All" aria-expanded="true" aria-controls="panelAll">
+                                    <button class="accordion-button {{#if (compare value.conditions.any.length '==' 0)}}collapsed{{/if}}" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}All" aria-expanded="{{#if (compare value.conditions.all.length '>' 0)}}true{{else}}false{{/if}}" aria-controls="panelAll">
                                     Match: ALL <span class="badge text-bg-secondary ms-1">{{length value.conditions.all}}</span>
                                     </button>
                                 </h2>
-                                <div id="panel{{key}}All" class="accordion-collapse collapse show">
+                                <div id="panel{{key}}All" class="accordion-collapse collapse{{#if (compare value.conditions.all.length '>' 0)}} show{{/if}}">
                                     <div class="accordion-body">
                                         {{#if (compare value.conditions.all.length '>' 0)}}
                                             <table class="table table-striped conditionsTable">
@@ -58,11 +58,11 @@
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}Any" aria-expanded="false" aria-controls="panelAny">
+                                    <button class="accordion-button {{#if (compare value.conditions.any.length '==' 0)}}collapsed{{/if}}" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}Any" aria-expanded="{{#if (compare value.conditions.any.length '>' 0)}}true{{else}}false{{/if}}" aria-controls="panelAny">
                                     Match: ANY <span class="badge text-bg-secondary ms-1">{{length value.conditions.any}}</span>
                                     </button>
                                 </h2>
-                                <div id="panel{{key}}Any" class="accordion-collapse collapse">
+                                <div id="panel{{key}}Any" class="accordion-collapse collapse {{#if (compare value.conditions.any.length '>' 0)}}show{{/if}}">
                                     <div class="accordion-body">
                                         {{#if (compare value.conditions.any.length '>' 0)}}
                                             <table class="table table-striped conditionsTable">
