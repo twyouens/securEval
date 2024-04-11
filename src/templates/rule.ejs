@@ -16,7 +16,7 @@
                 <div class="col-12">
                     <div class="card border-0">
                         <div class="card-body">
-                            <h3><%= rule.name %></h3>
+                            <span class=""><span class="fs-3 lh-base fw-medium"><%= rule.name %> </span><div class="spinner-border text-primary" role="status" style="display: none;" id="mainSpinner"></div></span></span>
                             <input type="hidden" name="ruleId" id="ruleId" value="<%= rule.id %>">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
@@ -61,6 +61,11 @@
                 </div>
             </div>
         <script src="/static/js/manageRule.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                loadOutcomes();
+            });
+        </script>
         <%- include('./partials/nav-end'); %>
         <%- include('./partials/footer'); %>
     </body>
