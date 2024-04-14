@@ -20,7 +20,7 @@
                         <div class="accordion" id="conditionsAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button {{#if (compare value.conditions.any.length '==' 0)}}collapsed{{/if}}" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}All" aria-expanded="{{#if (compare value.conditions.all.length '>' 0)}}true{{else}}false{{/if}}" aria-controls="panelAll">
+                                    <button class="accordion-button {{#if (compare value.conditions.all.length '==' 0)}}collapsed{{/if}}" type="button" data-bs-toggle="collapse" data-bs-target="#panel{{key}}All" aria-expanded="{{#if (compare value.conditions.all.length '>' 0)}}true{{else}}false{{/if}}" aria-controls="panelAll">
                                     Match: ALL <span class="badge text-bg-secondary ms-1">{{length value.conditions.all}}</span>
                                     </button>
                                 </h2>
@@ -102,7 +102,7 @@
     {{/eachKeyValue}}
 </script>
 <script id="conditionOperatorSelectTemplate" type="text/x-handlebars-template">
-    <select class="form-control" id="conditionOperator" name="operator">
+    <select class="form-control operator-select" id="conditionOperator" name="operator">
         <option disabled>Please Select</option>
         <option value="equal" {{optionSelected operator "equal"}}>Equal</option>
         <option value="notEqual" {{optionSelected operator "notEqual"}}>Not Equal</option>
