@@ -105,6 +105,7 @@ async function updateRule (req, res, next) {
         return res.status(404).json({message: 'Rule not found'});
     }
     const formErrors = validateRuleForm(req.body);
+    req.body.updatedAt = new Date();
     if(formErrors !== true){
         req.log.warn({err: "Invalid form data", detail: "Invalid form data", data: {formErrors: formErrors}}, "Invalid form data");
         return res.status(400).json({message: 'Invalid form data', errors: formErrors});
