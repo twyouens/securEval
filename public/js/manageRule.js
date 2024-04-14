@@ -156,7 +156,7 @@ const loadOutcomes = async () => {
 
 const addRowClickHandlers = () => {
     $('.conditionsTable').each(function() {
-        $(this).on('click', 'tr', function(event) {
+        $(this).on('click', 'tr.condition-row', function(event) {
             const $row = $(this);
             if (!$(this).hasClass('form-converted')) {
                 convertRowToForm($row);
@@ -164,6 +164,10 @@ const addRowClickHandlers = () => {
             }
         }
         );
+        $(this).on('click', '.add-condition', function(event) {
+            const $row = $(this).closest('tr');
+            addConditionRow($row);
+        });
     });
     $('.conditionsTable').on('click', 'input', function(event) {
         event.stopPropagation(); // Stop the click event from propagating to the row
@@ -269,10 +273,23 @@ const submitConditionChanges = async () => {
         },
         error: function(err){
             $('#mainSpinner').hide();
-            errorToast("Error updating rule: <br>"+err.data.message);
             console.log(err);
+            errorToast("Error updating rule: \n"+err.responseJSON.message);
         }
     });
+}
+
+const addConditionRow = ($row) => {
+    const index = splitConditonRowIndex($row.data('index'));
+    console.log(index);
+    const newCondition = {fact: '', operator: 'equal', value: ''};
+    ruleOutcomes[index[1]]['conditions'][index[2]].push(newCondition);
+    renderRuleConditions();
+    const newRuleConditionIndex = `condition/${index[1]}/${index[2]}/${ruleOutcomes[index[1]]['conditions'][index[2]].length - 1}`;
+    console.log(newRuleConditionIndex);
+    const $newRow = $(`tr[data-index="${newRuleConditionIndex}"]`);
+    convertRowToForm($newRow);
+    $newRow.addClass('form-converted');
 }
 
 const errorToast = (message) => {
