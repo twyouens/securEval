@@ -44,7 +44,7 @@
                                                             <td>{{this.value}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-brand btnEditRow">Edit</button>
-                                                                <button type="button" class="btn btn-sm btn-danger btnDeleteRow">Remove</button>
+                                                                <button type="button" class="btn btn-sm btn-danger btnDeleteRow" style="display: none;">Remove</button>
                                                             </td>
                                                         </tr>
                                                     {{/each}}
@@ -59,6 +59,7 @@
                                             </table>
                                         {{else}}
                                             <p>No conditions found.</p>
+                                            <button onclick="javascript: addFirstConditionRow('{{key}}','all')" type="button" class="btn btn-brand">+ Add Condition</button>
                                         {{/if}}
                                     </div>
                                 </div>
@@ -89,7 +90,7 @@
                                                             <td>{{this.value}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-brand btnEditRow">Edit</button>
-                                                                <button type="button" class="btn btn-sm btn-danger btnDeleteRow">Remove</button>
+                                                                <button type="button" class="btn btn-sm btn-danger btnDeleteRow" style="display: none;">Remove</button>
                                                             </td>
                                                         </tr>
                                                     {{/each}}
@@ -104,6 +105,7 @@
                                             </table>
                                         {{else}}
                                             <p>No conditions found.</p>
+                                            <button onclick="javascript: addFirstConditionRow('{{key}}','any')" type="button" class="btn btn-brand">+ Add Condition</button>
                                         {{/if}}
                                     </div>
                                 </div>
