@@ -88,28 +88,12 @@ class Parser {
         const conditions = {
             all: [],
             any: [],
-            greaterThan: [],
-            lessThan: [],
-            equal: [],
-            notEqual: [],
         };
         if (conditionsJson.all) {
             conditions.all = conditionsJson.all.map(condition => this.parseCondition(condition));
         }
         if (conditionsJson.any) {
             conditions.any = conditionsJson.any.map(condition => this.parseCondition(condition));
-        }
-        if (conditionsJson.greaterThan) {
-            conditions.greaterThan = conditionsJson.greaterThan.map(condition => this.parseCondition(condition));
-        }
-        if (conditionsJson.lessThan) {
-            conditions.lessThan = conditionsJson.lessThan.map(condition => this.parseCondition(condition));
-        }
-        if (conditionsJson.equal) {
-            conditions.equal = conditionsJson.equal.map(condition => this.parseCondition(condition));
-        }
-        if (conditionsJson.notEqual) {
-            conditions.notEqual = conditionsJson.notEqual.map(condition => this.parseCondition(condition));
         }
         return conditions;
     }
@@ -118,7 +102,8 @@ class Parser {
         return {
             fact: conditionJson.fact,
             operator: conditionJson.operator,
-            value: conditionJson.value
+            value: conditionJson.value,
+            _id: conditionJson._id
         };
     }
 
