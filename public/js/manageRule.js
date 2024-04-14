@@ -1,8 +1,12 @@
 var ruleModal;
+var ruleToast;
 var ruleOutcomes = {};
 var ruleFacts = [];
 const initializeRuleModal = () => {
     ruleModal = new bootstrap.Modal(document.getElementById("ruleModal"), {});
+}
+const initializeRuleToast = () => {
+    ruleToast = new bootstrap.Toast(document.getElementById("ruleToast"), {});
 }
 const updateRuleBasicForm = () => {
     let formData = {
@@ -183,9 +187,8 @@ const convertRowToForm = (row) => {
     populateValueOptions(valueSelect, condition);
     const $editBtn = $row.find('.btnEditRow');
     $editBtn.text('Save').off('click').on('click', function(event) {
-        // Prevent the row click event from firing when clicking the button
         event.stopPropagation();
-        saveTask(index, $row.find("input:nth-child(1)").val(), $row.find("input:nth-child(2)").val(),$row.find("input:nth-child(3)").val());
+        saveConditionRow($row);
     });
     factCell.find('.fact-select').one('click', function() {
         populateFactOptions($(this), condition);
@@ -226,11 +229,61 @@ const populateValueOptions = (select,currentCondition) => {
             valueExistsInFacts = true;
         }
     });
-    if (!valueExistsInFacts && currentCondition.value) {
+    if (!valueExistsInFacts && currentCondition.value || currentCondition.value == false) {
         select.val('other');
         select.siblings('.value-text').val(currentCondition.value).show();
     }else{
         select.val(currentCondition.value);
         select.siblings('.value-text').hide();
     }
+};
+
+const saveConditionRow = (row) => {
+    const index = splitConditonRowIndex(row.data('index'));
+    const condition = ruleOutcomes[index[1]]['conditions'][index[2]][index[3]];
+    const fact = row.find('.fact-select').val();
+    const operator = row.find('.operator-select').val();
+    const value = row.find('.value-select').val() === 'other' ? row.find('.value-text').val() : row.find('.value-select').val();
+    condition.fact = fact;
+    condition.operator = operator;
+    condition.value = value;
+    ruleOutcomes[index[1]]['conditions'][index[2]][index[3]] = condition;
+    console.log(ruleOutcomes);
+    console.log(JSON.stringify(ruleOutcomes));
+    submitConditionChanges();
+}
+
+const submitConditionChanges = async () => {
+    let ruleID = $('#ruleId').val();
+    $('#mainSpinner').show();
+    $.ajax({
+        url: '/api/v1/rule/'+ruleID,
+        method: 'PUT',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({outcomes: ruleOutcomes}),
+        success: function(data){
+            $('#mainSpinner').hide();
+            successToast("Rule updated successfully");
+            loadOutcomes();
+        },
+        error: function(err){
+            $('#mainSpinner').hide();
+            errorToast("Error updating rule: <br>"+err.data.message);
+            console.log(err);
+        }
+    });
+}
+
+const errorToast = (message) => {
+    initializeRuleToast();
+    $('#statusToastHeader').text("Error!").addClass("text-danger").removeClass("text-success");
+    $('#statusToastBody').text(message);
+    ruleToast.show();
+}
+const successToast = (message) => {
+    initializeRuleToast();
+    $('#statusToastHeader').text("Success!").addClass("text-success").removeClass("text-danger");
+    $('#statusToastBody').text(message);
+    ruleToast.show();
 };
