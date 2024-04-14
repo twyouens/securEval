@@ -44,7 +44,7 @@
                                                             <td>{{this.value}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-brand btnEditRow">Edit</button>
-                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition('condition/{{../key}}/all/{{@index}}')">Remove</button>
+                                                                <button type="button" class="btn btn-sm btn-danger btnDeleteRow">Remove</button>
                                                             </td>
                                                         </tr>
                                                     {{/each}}
@@ -89,7 +89,7 @@
                                                             <td>{{this.value}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-brand btnEditRow">Edit</button>
-                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition('conditon/{{../key}}/any/{{@index}}')">Remove</button>
+                                                                <button type="button" class="btn btn-sm btn-danger btnDeleteRow">Remove</button>
                                                             </td>
                                                         </tr>
                                                     {{/each}}
@@ -116,7 +116,7 @@
     {{/eachKeyValue}}
 </script>
 <script id="conditionOperatorSelectTemplate" type="text/x-handlebars-template">
-    <select class="form-control operator-select" id="conditionOperator" name="operator">
+    <select class="form-control operator-select" id="{{operatorSelectID}}" name="operator">
         <option disabled>Please Select</option>
         <option value="equal" {{optionSelected operator "equal"}}>Equal</option>
         <option value="notEqual" {{optionSelected operator "notEqual"}}>Not Equal</option>
@@ -124,4 +124,5 @@
         <option value="lessThan" {{optionSelected operator "lessThan"}}>Less Than</option>
         <option value="contains" {{optionSelected operator "contains"}}>Contains</option>
     </select>
+    <div class="invalid-feedback" id="{{operatorSelectID}}/feedback"></div>
 </script>
