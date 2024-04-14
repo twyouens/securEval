@@ -7,6 +7,17 @@
     </head>
     <body>
         <%- include('./partials/nav-start'); %>
+            <div class='toast-container' style='position: sticky;top: 10px;right: 10px;z-index:2;width: max-content;margin-left:auto;'>
+                <div class='toast fade' id='ruleToast' data-bs-autohide="false">
+                    <div class='toast-header'>
+                        <strong class='me-auto' id="statusToastHeader"></strong>
+                        <button type='button' class='btn-close' data-bs-dismiss='toast'></button>
+                    </div>
+                    <div class='toast-body'>
+                        <span id="statusToastBody"></span>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <h3><a href="/rules" class="text-decoration-none">&#x2190;</a> Rule</h3>
@@ -56,6 +67,19 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div aria-live="polite" aria-atomic="true" class="bg-body-secondary position-relative bd-example-toasts rounded-3">
+                <div class="toast-container p-3" id="toastPlacement">
+                    <div class="toast">
+                        <div class="toast-header">
+                            <strong class="me-auto" id="statusToastHeader"></strong>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body" id="statusToastBody">
+                            
                         </div>
                     </div>
                 </div>
