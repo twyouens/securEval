@@ -98,22 +98,20 @@ async function getTenantUser (req, res, next) {
     res.json(user);
 }
 
-async function updateRule(req, res, next) {
+async function updateRule (req, res, next) {
     const ruleID = req.params.ruleID;
-    console.log(req.token)
     const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id});
     if(!rule){
         return res.status(404).json({message: 'Rule not found'});
     }
     const formErrors = validateRuleForm(req.body);
-    if(formErrors != true){
+    if(formErrors !== true){
+        req.log.warn({err: "Invalid form data", detail: "Invalid form data", data: {formErrors: formErrors}}, "Invalid form data");
         return res.status(400).json({message: 'Invalid form data', errors: formErrors});
     }
     try{
-        const updatedRule = await Rule.findByIdAndUpdate(ruleID, req.body, {new: true});
-        // const parser = new Parser(updatedRule);
-        // let parsedRule = parser.parse();
-        return res.json(updatedRule);
+        const updatedRule = await Rule.findByIdAndUpdate(ruleID, req.body);
+        return res.json({state: "success"});
     } catch (err) {
         req.log.error({err: err, detail: "Error updating rule", data: {ruleID: ruleID, updateData: req.body}}, "Internal Server Error");
         return res.status(500).json({message: 'Internal Server Error'});
