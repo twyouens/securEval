@@ -11,7 +11,7 @@ async function checkAPIKey(req, res, next) {
                 var decoded = JWT.verify(token, process.env.JWT_SECRET);
                 req.token = decoded;
                 await addUserSessionData(req, res, next);
-                return next();
+                return;
             }catch(err){
                 req.log.warn({err: "Unauthorized Request", detail: "Invalid Token"}, "Unauthorized Request");
                 return res.status(401).json({message: 'Unauthorized'});
