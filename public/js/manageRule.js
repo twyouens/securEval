@@ -198,6 +198,7 @@ const convertRowToForm = (row) => {
         saveConditionRow($row);
     });
     const $deleteBtn = $row.find('.btnDeleteRow');
+    $deleteBtn.show();
     $deleteBtn.off('click').on('click', function(event) {
         event.stopPropagation();
         deleteConditionRow($row);
@@ -377,3 +378,13 @@ const deleteConditionRow = (row) => {
     ruleOutcomes[index[1]]['conditions'][index[2]].splice(index[3], 1);
     validateAndSaveRule();
 };
+
+const addFirstConditionRow = (outcome, conditionGroup) => {
+    const newCondition = {fact: '', operator: 'equal', value: ''};
+    ruleOutcomes[outcome]['conditions'][conditionGroup].push(newCondition);
+    renderRuleConditions();
+    const newRuleConditionIndex = `condition/${outcome}/${conditionGroup}/${ruleOutcomes[outcome]['conditions'][conditionGroup].length - 1}`;
+    const $newRow = $(`tr[data-index="${newRuleConditionIndex}"]`);
+    convertRowToForm($newRow);
+    $newRow.addClass('form-converted');
+}
