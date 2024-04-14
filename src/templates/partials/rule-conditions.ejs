@@ -38,17 +38,24 @@
                                                 </thead>
                                                 <tbody>
                                                     {{#each value.conditions.all}}
-                                                        <tr data-index="condition/{{../key}}/all/{{@index}}">
+                                                        <tr data-index="condition/{{../key}}/all/{{@index}}" class="condition-row">
                                                             <td>{{this.fact}}</td>
                                                             <td>{{this.operator}}</td>
                                                             <td>{{this.value}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-brand btnEditRow">Edit</button>
-                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition(this)">Remove</button>
+                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition('condition/{{../key}}/all/{{@index}}')">Remove</button>
                                                             </td>
                                                         </tr>
                                                     {{/each}}
                                                 </tbody>
+                                                <tfoot>
+                                                    <tr data-index="condition/{{key}}/all/999" class="new-condition-row">
+                                                        <td colspan="4">
+                                                            <button class="btn btn-brand add-condition">+ Add Condition</button>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
                                             </table>
                                         {{else}}
                                             <p>No conditions found.</p>
@@ -76,17 +83,24 @@
                                                 </thead>
                                                 <tbody>
                                                     {{#each value.conditions.any}}
-                                                        <tr data-index="conditon/{{../key}}/any/{{@index}}">
+                                                        <tr data-index="condition/{{../key}}/any/{{@index}}" class="condition-row">
                                                             <td>{{this.fact}}</td>
                                                             <td>{{this.operator}}</td>
                                                             <td>{{this.value}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-sm btn-brand btnEditRow">Edit</button>
-                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition(this)">Remove</button>
+                                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeCondition('conditon/{{../key}}/any/{{@index}}')">Remove</button>
                                                             </td>
                                                         </tr>
                                                     {{/each}}
                                                 </tbody>
+                                                <tfoot>
+                                                    <tr data-index="condition/{{key}}/any/999" class="new-condition-row">
+                                                        <td colspan="4">
+                                                            <button class="btn btn-brand add-condition">+ Add Condition</button>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
                                             </table>
                                         {{else}}
                                             <p>No conditions found.</p>
