@@ -181,11 +181,14 @@ const convertRowToForm = (row) => {
 
     // // Replace text with input fields
     const factCell = $row.find('td').eq(0);
-    factCell.html(`<select class='form-control fact-select'><option disabled>Select Fact</option><option value='${condition.fact}' selected>${condition.fact}</option></select>`);
-    const conditionOperator = renderFromTemplate('conditionOperatorSelectTemplate', {operator: condition.operator});
+    let factSelectID = `condition/${index[1]}/${index[2]}/${index[3]}/fact`;
+    factCell.html(`<select class='form-control fact-select' id='${factSelectID}'><option disabled>Select Fact</option><option value='${condition.fact}' selected>${condition.fact}</option></select><div class="invalid-feedback" id="${factSelectID}/feedback"></div>`);
+    let operatorSelectID = `condition/${index[1]}/${index[2]}/${index[3]}/operator`;
+    const conditionOperator = renderFromTemplate('conditionOperatorSelectTemplate', {operator: condition.operator,operatorSelectID: operatorSelectID});
     $row.find("td:nth-child(2)").html(conditionOperator);
     const valueCell = $row.find('td').eq(2);
-    let valueSelectHtml = `<select class='form-control value-select'><option disabled>Select Value</option><option value='other'>Other</option></select><input type='text' class='form-control value-text' style='display:none;' value='${condition.value}' />`;
+    let valueSelectID = `condition/${index[1]}/${index[2]}/${index[3]}/value`;
+    let valueSelectHtml = `<select class='form-control value-select' id='${valueSelectID}'><option disabled>Select Value</option><option value='other'>Other</option></select><input type='text' class='form-control value-text' style='display:none;' value='${condition.value}' id="${valueSelectID}/value"/><div class="invalid-feedback" id="${valueSelectID}/feedback"></div>`;
     valueCell.html(valueSelectHtml);
     let valueSelect = valueCell.find('.value-select');
     populateValueOptions(valueSelect, condition);
@@ -193,6 +196,11 @@ const convertRowToForm = (row) => {
     $editBtn.text('Save').off('click').on('click', function(event) {
         event.stopPropagation();
         saveConditionRow($row);
+    });
+    const $deleteBtn = $row.find('.btnDeleteRow');
+    $deleteBtn.off('click').on('click', function(event) {
+        event.stopPropagation();
+        deleteConditionRow($row);
     });
     factCell.find('.fact-select').one('click', function() {
         populateFactOptions($(this), condition);
@@ -253,9 +261,17 @@ const saveConditionRow = (row) => {
     condition.value = value;
     ruleOutcomes[index[1]]['conditions'][index[2]][index[3]] = condition;
     console.log(ruleOutcomes);
-    console.log(JSON.stringify(ruleOutcomes));
-    submitConditionChanges();
+    validateAndSaveRule();
 }
+
+const validateAndSaveRule = () => {
+    let validationErrors = validateRuleOutcomes();
+    if(validationErrors !== true){
+        errorToast("Invalid rule conditions. Please correct the errors before saving.");
+        return null;
+    }
+    submitConditionChanges();
+};
 
 const submitConditionChanges = async () => {
     let ruleID = $('#ruleId').val();
@@ -303,4 +319,61 @@ const successToast = (message) => {
     $('#statusToastHeader').text("Success!").addClass("text-success").removeClass("text-danger");
     $('#statusToastBody').text(message);
     ruleToast.show();
+};
+
+const validateRuleOutcomes = () => {
+    //clear all feedback messages
+    $('.is-invalid').each(function() {
+        $(this).removeClass('is-invalid');
+    });
+    let errors = [];
+    Object.entries(ruleOutcomes).forEach(([outcome, detail]) => {
+        if (!detail.conditions) {
+            errors.push({input: "conditions", message: "Outcome is missing required conditions field."});
+        }
+        if(typeof detail.conditions !== 'object'){
+            errors.push({input: "conditions", message: "Invalid conditions"});
+        }
+        const conditionTypes = ["all", "any"];
+        const conditionKeys = Object.keys(detail.conditions);
+        const invalidConditions = conditionKeys.filter(key => !conditionTypes.includes(key));
+        if (invalidConditions.length > 0) {
+            errors.push({input: invalidConditions[0], message: "Invalid condition key"});
+        }
+        Object.entries(detail.conditions).forEach(([conditionType, conditions]) => {
+            if(!Array.isArray(conditions)){
+                errors.push({input: "conditions", message: "Invalid conditions"});
+            }
+            conditions.forEach((condition, i) => {
+                if (!condition.fact || !condition.operator || condition.value === undefined) {
+                    errors.push({input: "conditions", message: "Condition is missing required fields (fact, operator, value)", conditionType: conditionType, conditionInput: condition});
+                }
+                if(!(/^(request|static)-([a-zA-Z][a-zA-Z0-9_-]*)$/.test(condition.fact))){
+                    appendInputError(`condition/${outcome}/${conditionType}/${i}/fact`, "Invalid fact. Please select Fact.");
+                    errors.push({input: "conditions", message: "Invalid fact", conditionType: conditionType, conditionInput: condition.fact});
+                }
+                if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9_-]+)$/.test(condition.value))){
+                    appendInputError(`condition/${outcome}/${conditionType}/${i}/value`, "Invalid value. Please select Value.");
+                    errors.push({input: "conditions", message: "Invalid value", conditionType: conditionType, conditionInput: condition.value});
+                }
+                const validOperators = ['equal', 'notEqual', 'greaterThan', 'lessThan', 'contains'];
+                if(!validOperators.includes(condition.operator)){
+                    appendInputError(`condition/${outcome}/${conditionType}/${i}/operator`, "Invalid operator. Please select Operator.");
+                    errors.push({input: "conditions", message: "Invalid operator", conditionType: conditionType, conditionInput: condition.operator});
+                }
+            });
+        });
+    });
+    return errors.length > 0 ? errors : true;
+};
+const appendInputError = (index, message) => {
+    const escapedIndex = index.replace(/\//g, '\\/');
+    $(`#${escapedIndex}`).addClass('is-invalid');
+    $(`#${escapedIndex}\\/feedback`).text(message);
+};
+
+const deleteConditionRow = (row) => {
+    const index = splitConditonRowIndex(row.data('index'));
+    ruleOutcomes[index[1]]['conditions'][index[2]].splice(index[3], 1);
+    validateAndSaveRule();
 };
