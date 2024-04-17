@@ -8,7 +8,7 @@ apiAuthenticatedRouter.use(checkAPIKey);
 
 //rules
 apiAuthenticatedRouter.get("/rules", apiAuthenticatedController.getRules);
-apiAuthenticatedRouter.post("/rule", apiAuthenticatedController.createRule);
+apiAuthenticatedRouter.post("/rules", apiAuthenticatedController.createRule);
 apiAuthenticatedRouter.get("/rule/:ruleID", apiAuthenticatedController.getRule);
 apiAuthenticatedRouter.put("/rule/:ruleID", apiAuthenticatedController.updateRule);
 apiAuthenticatedRouter.get("/rule/:ruleID/fact/:factID", apiAuthenticatedController.getRuleFact);
