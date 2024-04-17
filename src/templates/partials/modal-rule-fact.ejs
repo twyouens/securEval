@@ -29,22 +29,20 @@
             </div>
             <div id="string-input" class="form-group mb-2 value-input" style="display:none;">
                 <label for="factValue">Fact Value</label>
-                <input type="text" class="form-control" id="factValue" name="value" placeholder="Fact Value" value="{{fact.value}}">
+                <input type="text" class="form-control factValue string" id="factValue" name="value" placeholder="Fact Value" value="{{fact.value}}">
             </div>
 
             <div id="number-input" class="form-group mb-2 value-input" style="display:none;">
                 <label for="factValue">Fact Value</label>
-                <input type="number" class="form-control" id="factValue" name="value" placeholder="Fact Value" value="{{fact.value}}">
+                <input type="number" class="form-control factValue number" id="factValue" name="value" placeholder="Fact Value" value="{{fact.value}}">
             </div>
-
             <div id="boolean-input" class="form-group mb-2 value-input" style="display:none;">
                 <label for="factValue">Fact Value</label>
-                <select class="form-control" id="factValue" name="value">
+                <select class="form-control factValue boolean" id="factValue" name="value">
                     <option value="true" {{optionSelected fact.value "true"}}>True</option>
                     <option value="false" {{optionSelected fact.value "false"}}>False</option>
                 </select>
             </div>
-
             <div id="array-input" class="mb-2 value-input" style="display:none;">
                 <div id="itemsList">
                     <ul class="list-group" id="arrayItemsList">
@@ -56,11 +54,14 @@
                     <button class="btn btn-brand" type="button" id="addArrayItem">Add</button>
                 </div>
             </div>
+            <div class="invalid-feedback" id="factValueFeedback">
+                
+            </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                     <button type="submit" class="btn btn-brand">Update</button>
+                     <button type="button" class="btn btn-brand" onclick="javascript: saveFact();">Update</button>
                 </div>
             </div>
         </div>
