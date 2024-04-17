@@ -23,7 +23,7 @@ body{
   }
   .tooltip .tooltiptext {
     visibility: hidden;
-    width: 150px;
+    width: 200px;
     background-color: #555;
     color: #fff;
     text-align: center;
@@ -33,7 +33,7 @@ body{
     z-index: 1;
     bottom: 125%;
     left: 50%;
-    margin-left: -75px;
+    margin-left: -100px;
     opacity: 0;
     transition: opacity 0.3s;
   }
