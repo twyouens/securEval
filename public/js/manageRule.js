@@ -467,7 +467,7 @@ const validateRuleOutcomes = () => {
                     appendInputError(`condition/${outcome}/${conditionType}/${i}/fact`, "Invalid fact. Please select Fact.");
                     errors.push({input: "conditions", message: "Invalid fact", conditionType: conditionType, conditionInput: condition.fact});
                 }
-                if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9_-]+)$/.test(condition.value))){
+                if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9_-']+)$/.test(condition.value))){
                     appendInputError(`condition/${outcome}/${conditionType}/${i}/value`, "Invalid value. Please select Value.");
                     errors.push({input: "conditions", message: "Invalid value", conditionType: conditionType, conditionInput: condition.value});
                 }
