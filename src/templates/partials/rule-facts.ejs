@@ -9,33 +9,38 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <% if (rule.facts.length > 0) { %>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Fact Name</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Source</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% rule.facts.forEach(fact => { %>
-                        <tr>
-                            <td><%= fact.name %></td>
-                            <td><%= fact.type %></td>
-                            <td><%= fact.source %></td>
-                            <td>
-                                <button type="button" class="btn btn-brand" onclick="javascript: modalRuleFact('<%= fact._id %>');">Edit</button>
-                                <button type="button" class="btn btn-danger">Delete</button
-                            </td>
-                        </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-        <% } else { %>
-            <p>No facts found.</p>
-        <% } %>
+        <div id="ruleFacts">
+            <button class="btn btn-brand" onclick="javascript: renderRuleFacts();">Render</button>
+        </div>
     </div>
 </div>
+<script id="ruleFactsTemplate" type="text/x-handlebars-template">
+    {{#if (compare facts.length '>' 0)}}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Fact Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Source</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each facts}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{#if (compare this.type '==' 'string')}}<span class="badge" style="background-color: purple;">String</span>{{/if}}{{#if (compare this.type '==' 'number')}}<span class="badge" style="background-color:steelblue;">Number</span>{{/if}}{{#if (compare this.type '==' 'boolean')}}<span class="badge" style="background-color:#F8C384;">Boolean</span>{{/if}}{{#if (compare this.type '==' 'array')}}<span class="badge" style="background-color:#F88484">Array (List)</span>{{/if}}{{#if (compare this.type '==' 'timeFrame')}}<span class="badge" style="background-color:#32d540">Time Frame</span>{{/if}}{{#if (compare this.type '==' 'dayFrame')}}<span class="badge" style="background-color:#f484f8">Day Frame</span>{{/if}}{{#if (compare this.type '==' 'monthFrame')}}<span class="badge" style="background-color:#88f884">Month Frame</span>{{/if}}</td>
+                        <td>{{this.source}}</td>
+                        <td>
+                            <button type="button" class="btn btn-brand" onclick="javascript: modalRuleFact('{{this._id}}');">Edit</button>
+                            <button type="button" class="btn btn-danger">Delete</button
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <p>No facts found.</p>
+    {{/if}}
+</script>    
 <%- include('./modal-rule-fact'); %>
