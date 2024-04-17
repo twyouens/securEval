@@ -99,6 +99,10 @@ class Parser {
     }
 
     parseCondition(conditionJson) {
+        if(conditionJson.value === "true"){conditionJson.value = true;}
+        if(conditionJson.value === "false"){conditionType.value = false;}
+        if(conditionJson.value === "'true'"){conditionJson.value = "true";}
+        if(conditionJson.value === "'false'"){conditionJson.value = "false";}
         return {
             fact: conditionJson.fact,
             operator: conditionJson.operator,
