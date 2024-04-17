@@ -1,5 +1,6 @@
 var ruleModal;
 var ruleToast;
+var selectedFact = {};
 var ruleOutcomes = {};
 var ruleFacts = [];
 const initializeRuleModal = () => {
@@ -56,11 +57,18 @@ const modalRuleFact = (factID) => {
         method: 'GET',
         dataType: 'json',
         success: function(data){
-            let modalBody = renderFromTemplate('ruleFactModalTemplate', {fact: data});
+            selectedFact = data;
+            let modalBody = renderFromTemplate('ruleFactModalTemplate', {fact: selectedFact});
             $('#ruleModalBody').html(modalBody);
             $('#ruleModalTitle').text("Fact");
+            if(selectedFact.source === "static"){
+                updateFactTypeInputs(selectedFact.type);
+            }else{
+                $('.value-input').hide();
+            }
             initializeRuleModal();
             ruleModal.show();
+            addFactModalHandling();
         },
         error: function(err){
             console.log(err);
@@ -68,6 +76,17 @@ const modalRuleFact = (factID) => {
     });
             
 }
+
+const newFactModal = () => {
+    selectedFact = {name: '', source: 'static', type: 'string', value: ''};
+    let modalBody = renderFromTemplate('ruleFactModalTemplate', {fact: selectedFact});
+    $('#ruleModalBody').html(modalBody);
+    updateFactTypeInputs(selectedFact.type);
+    $('#ruleModalTitle').text("New Fact");
+    initializeRuleModal();
+    ruleModal.show();
+    addFactModalHandling();
+};
 
 const renderFromTemplate = (templateID, data) => {
     Handlebars.registerHelper('optionSelected', function(arg1, arg2) {
@@ -127,6 +146,102 @@ const renderFromTemplate = (templateID, data) => {
     const template = Handlebars.compile(templateSrc);
     return template(data);
 }
+
+const addFactModalHandling = () => {
+    $('#factSource').change(function() {
+        var source = $(this).val();
+        if (source === "static") {
+            updateFactTypeInputs($('#factType').val());
+        } else {
+            $('.value-input').hide();
+        }
+    });
+    $('#factType').change(function() {
+        // Update input fields only if the source is "static"
+        if ($('#factSource').val() === "static") {
+            updateFactTypeInputs($(this).val());
+        }
+    });
+    $('#addArrayItem').click(function() {
+        const newItem = $('#newArrayItem').val().trim();
+        if(!/^[a-zA-Z0-9 \-_.]{1,60}$/.test(newItem)){
+            $('#newArrayItem').addClass('is-invalid');
+            $('#newArrayItemFeedback').text('Invalid Input.');
+        }else{
+            $('#newArrayItem').removeClass('is-invalid');
+            $('#newArrayItemFeedback').text('');
+        }
+        if (newItem) {
+            selectedFact.value.push(newItem);
+            populateFactArrayValues();
+            $('#newArrayItem').val('')
+        }
+    });
+    $('#arrayItemsList').on('click', '.remove-item', function() {
+        const itemText = $(this).siblings('.arrayItemValue').text().trim();
+        selectedFact.value = selectedFact.value.filter(item => item != itemText);
+        populateFactArrayValues();
+    });
+};
+
+const updateFactTypeInputs = (factType) => {
+    $('.value-input').hide();
+    switch (factType) {
+        case "string":
+            if(typeof selectedFact.value != 'string'){
+                selectedFact.value = '';
+            }
+            $('#string-input').show();
+            break;
+        case "number":
+            if(typeof selectedFact.value != 'number'){
+                selectedFact.value = 0;
+            }
+            $('#number-input').show();
+            break;
+        case "boolean":
+            if(typeof selectedFact.value != 'boolean'){
+                selectedFact.value = true;
+            }
+            $('#boolean-input').show();
+            break;
+        case "array":
+            if(typeof selectedFact.value != 'object'){
+                selectedFact.value = [];
+            }
+            populateFactArrayValues();
+            $('#array-input').show();
+            break;
+        case "timeFrame":
+            if(typeof selectedFact.value != 'object'){
+                selectedFact.value = [];
+            }
+            populateFactArrayValues();
+            $('#array-input').show();
+            break;
+        case "dayFrame":
+            if(typeof selectedFact.value != 'object'){
+                selectedFact.value = [];
+            }
+            populateFactArrayValues();
+            $('#array-input').show();
+            break;
+        case "monthFrame":
+            if(typeof selectedFact.value != 'object'){
+                selectedFact.value = [];
+            }
+            populateFactArrayValues();
+            $('#array-input').show();
+            break;
+    }
+};
+const populateFactArrayValues = () => {
+    $('#arrayItemsList').empty(); // Clear existing list items
+    selectedFact.value.forEach(function(item) {
+        $('#arrayItemsList').append(`<li class="list-group-item"><span class="arrayItemValue">${item}</span><button type="button" class="btn btn-sm btn-danger float-end remove-item">Remove</button></li>`);
+    });
+};
+
 
 const renderRuleConditions = async () => {
     const template = renderFromTemplate('ruleConditionsTemplate', {outcomes: ruleOutcomes});
@@ -388,3 +503,62 @@ const addFirstConditionRow = (outcome, conditionGroup) => {
     convertRowToForm($newRow);
     $newRow.addClass('form-converted');
 }
+
+const saveFact = () => {
+
+};
+
+const validateFactForm = () => {
+    if(!/^[a-zA-Z0-9\-_.]{1,60}$/.test(selectedFact.name)){
+        $('#factName').addClass('is-invalid');
+        $('#factNameFeedback').text('Invalid name');
+        return false;
+    }
+    if(!/^(static|request)$/.test(selectedFact.source)){
+        $('#factSource').addClass('is-invalid');
+        $('#factSourceFeedback').text('Invalid source');
+        return false;
+    }
+    if(!/^(string|number|boolean|array|timeFrame|dayFrame|monthFrame)$/.test(selectedFact.type)){
+        $('#factType').addClass('is-invalid');
+        $('#factTypeFeedback').text('Invalid type');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type === "string" && typeof selectedFact.value !== 'string' && !/^[a-zA-Z0-9 \-_@!&.]{1,60}$/.test(selectedFact.value)){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type === "number" && typeof selectedFact.value !== 'number'){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type === "boolean" && selectedFact.value != "true" && selectedFact.value != "false"){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type)
+    if(selectedFact.source === "static" && selectedFact.type === "array" && !Array.isArray(selectedFact.value)){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type === "timeFrame" && !Array.isArray(selectedFact.value)){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type === "dayFrame" && !Array.isArray(selectedFact.value)){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    if(selectedFact.source === "static" && selectedFact.type === "monthFrame" && !Array.isArray(selectedFact.value)){
+        $('#factValue').addClass('is-invalid');
+        $('#factValueFeedback').text('Invalid value');
+        return false;
+    }
+    return true;
+};
