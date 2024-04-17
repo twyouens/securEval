@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-md-9">
                     <h3><a href="/rules" class="text-decoration-none">&#x2190;</a> Rule</h3>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 <div class="col-12">
                     <div class="card border-0">
                         <div class="card-body">
-                            <span class=""><span class="fs-3 lh-base fw-medium"><%= rule.name %> </span><div class="spinner-border text-primary" role="status" style="display: none;" id="mainSpinner"></div></span></span>
+                            <span class=""><span class="fs-3 lh-base fw-medium"><%= rule.name %> </span><span class="tooltip">&#9432;<span class="tooltiptext"><%= rule._id %></span></span><div class="spinner-border text-primary" role="status" style="display: none;" id="mainSpinner"></div></span></span>
                             <input type="hidden" name="ruleId" id="ruleId" value="<%= rule.id %>">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
