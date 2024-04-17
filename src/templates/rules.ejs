@@ -15,34 +15,59 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <% if (rules.length > 0) { %>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Rule Name</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Last Modified</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% rules.forEach(rule => { %>
-                                    <tr>
-                                        <td><%= rule.name %></td>
-                                        <td><%= rule.status %></td>
-                                        <td><%= rule.updatedAt %></td>
-                                        <td>
-                                            <a href="/rule/<%= rule._id %>" class="btn btn-brand">Edit</a>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            </tbody>
-                        </table>
-                    <% } else { %>
-                        <p>No rules found.</p>
-                    <% } %>
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button onclick="javascript: createRuleModal();" class="btn btn-brand">Create Rule</button>
+                            </div>
+                            <% if (rules.length > 0) { %>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Rule Name</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Last Modified</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% rules.forEach(rule => { %>
+                                            <tr>
+                                                <td><%= rule.name %></td>
+                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td><%= moment(rule.updatedAt).fromNow() %></td>
+                                                <td>
+                                                    <a href="/rule/<%= rule._id %>" class="btn btn-brand">Edit</a>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <p>No rules found.</p>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="modal fade" id="ruleModal" tabindex="-1" aria-labelledby="ruleModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="ruleModalTitle">Rule</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="ruleModalBody">
+                        
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <script src="/static/js/manageRules.js"></script>
+        <%- include('./partials/modal-rule-new'); %>
         <%- include('./partials/nav-end'); %>
         <%- include('./partials/footer'); %>
     </body>
