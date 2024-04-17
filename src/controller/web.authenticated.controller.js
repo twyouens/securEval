@@ -11,7 +11,8 @@ async function logout (req, res) {
 
 async function rules (req, res) {
     const tenantRules = await Rule.find({tenant: req.session.tenant._id}).select('name description version createdAt updatedAt targets');
-    res.render("rules",{session: req.session, rules: tenantRules});
+    const moment = require('moment');
+    res.render("rules",{session: req.session, rules: tenantRules, moment: moment});
 }
 
 async function manageRule (req, res) {
