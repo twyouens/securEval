@@ -1,0 +1,23 @@
+<script id="newRuleModalTemplate" type="text/x-handlebars-template">
+    <form id="modalRule">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group mb-2">
+                    <label for="ruleFact">Rule Name</label>
+                    <input type="text" class="form-control" id="ruleName" name="name" placeholder="my new rule">
+                </div>
+                <div class="form-group mb-2">
+                    <label for="ruleFact">Rule Description</label>
+                    <input type="text" class="form-control" id="ruleDescription" name="description" placeholder="">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                     <button type="submit" class="btn btn-brand" id="newRuleModalSaveBtn" onclick="javascript: submitNewRule();">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
