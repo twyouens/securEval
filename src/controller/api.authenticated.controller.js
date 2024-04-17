@@ -64,7 +64,12 @@ async function createRule(req, res, next) {
                     any: []
                 }
             }
-        }
+        },
+        outcomeRanking: [
+            "allowed",
+            "additional-information",
+            "denied"
+        ]
     };
     const rule = new Rule(newRule);
     try {
