@@ -259,7 +259,6 @@ const loadOutcomes = async () => {
         success: function(data){
             $('#mainSpinner').hide();
             ruleOutcomes = data.outcomes;
-            ruleFacts = data.facts;
             renderRuleConditions();
         },
         error: function(err){
@@ -505,7 +504,87 @@ const addFirstConditionRow = (outcome, conditionGroup) => {
 }
 
 const saveFact = () => {
-
+    selectedFact.name = $('#factName').val();
+    selectedFact.source = $('#factSource').val();
+    selectedFact.type = $('#factType').val();
+    if(selectedFact.source === "static"){
+        switch (selectedFact.type) {
+            case "string":
+                selectedFact.value = $('.factValue.string').val();
+                break;
+            case "number":
+                selectedFact.value = parseFloat($('.factValue.number').val());
+                break;
+            case "boolean":
+                selectedFact.value = $('.factValue.boolean').val() == "true" ? true : false;
+                break;
+            case "array":
+                selectedFact.value = typeof selectedFact.value === 'object' ? selectedFact.value : [];
+                break;
+            case "timeFrame":
+                selectedFact.value = typeof selectedFact.value === 'object' ? selectedFact.value : [];
+                break;
+            case "dayFrame":
+                selectedFact.value = typeof selectedFact.value === 'object' ? selectedFact.value : [];
+                break;
+            case "monthFrame":
+                selectedFact.value = typeof selectedFact.value === 'object' ? selectedFact.value : [];
+                break;
+        }
+    }
+    if(!validateFactForm()){
+        return;
+    }
+    if ('_id' in selectedFact) {
+        const index = ruleFacts.findIndex(fact => fact._id === selectedFact._id);
+        if (index !== -1) {
+            ruleFacts[index] = selectedFact;
+        } else {
+            console.log("Fact with _id not found.");
+        }
+    } else {
+        ruleFacts.push(selectedFact);
+    }
+    console.log(ruleFacts);
+    submitFacts();
+};
+const frameOptions = (frameType) => {
+    let options = [];
+    switch (frameType) {
+        case "timeFrame":
+            options = [
+                {name: "00:00", value: "00:00"},{name: "01:00", value: "01:00"},{name: "02:00", value: "02:00"},{name: "03:00", value: "03:00"},{name: "04:00", value: "04:00"},{name: "05:00", value: "05:00"},{name: "06:00", value: "06:00"},{name: "07:00", value: "07:00"},{name: "08:00", value: "08:00"},{name: "09:00", value: "09:00"},{name: "10:00", value: "10:00"},{name: "11:00", value: "11:00"},{name: "12:00", value: "12:00"},{name: "13:00", value: "13:00"},{name: "14:00", value: "14:00"},{name: "15:00", value: "15:00"},{name: "16:00", value: "16:00"},{name: "17:00", value: "17:00"},{name: "18:00", value: "18:00"},{name: "19:00", value: "19:00"},{name: "20:00", value: "20:00"},{name: "21:00", value: "21:00"},{name: "22:00", value: "22:00"},{name: "23:00", value: "23:00"}
+            ];
+            break;
+        case "dayFrame":
+            options = [
+                {name: "Monday", value: "monday"},
+                {name: "Tuesday", value: "tuesday"},
+                {name: "Wednesday", value: "wednesday"},
+                {name: "Thursday", value: "thursday"},
+                {name: "Friday", value: "friday"},
+                {name: "Saturday", value: "saturday"},
+                {name: "Sunday", value: "sunday"}
+            ];
+            break;
+        case "monthFrame":
+            options = [
+                {name: "January", value: "january"},
+                {name: "February", value: "february"},
+                {name: "March", value: "march"},
+                {name: "April", value: "april"},
+                {name: "May", value: "may"},
+                {name: "June", value: "june"},
+                {name: "July", value: "july"},
+                {name: "August", value: "august"},
+                {name: "September", value: "september"},
+                {name: "October", value: "october"},
+                {name: "November", value: "november"},
+                {name: "December", value: "december"}
+            ];
+            break;
+    }
+    return options;
 };
 
 const validateFactForm = () => {
@@ -524,18 +603,18 @@ const validateFactForm = () => {
         $('#factTypeFeedback').text('Invalid type');
         return false;
     }
-    if(selectedFact.source === "static" && selectedFact.type === "string" && typeof selectedFact.value !== 'string' && !/^[a-zA-Z0-9 \-_@!&.]{1,60}$/.test(selectedFact.value)){
-        $('#factValue').addClass('is-invalid');
+    if(selectedFact.source === "static" && selectedFact.type === "string" && typeof selectedFact.value !== 'string' && !(/^[a-zA-Z0-9 \-_@!&.]{1,60}$/.test(selectedFact.value))){
+        $('.factValue.string').addClass('is-invalid');
         $('#factValueFeedback').text('Invalid value');
         return false;
     }
     if(selectedFact.source === "static" && selectedFact.type === "number" && typeof selectedFact.value !== 'number'){
-        $('#factValue').addClass('is-invalid');
+        $('.factValue.number').addClass('is-invalid');
         $('#factValueFeedback').text('Invalid value');
         return false;
     }
-    if(selectedFact.source === "static" && selectedFact.type === "boolean" && selectedFact.value != "true" && selectedFact.value != "false"){
-        $('#factValue').addClass('is-invalid');
+    if(selectedFact.source === "static" && selectedFact.type === "boolean" && typeof selectedFact.value !== 'boolean'){
+        $('.factValue.boolean').addClass('is-invalid');
         $('#factValueFeedback').text('Invalid value');
         return false;
     }
@@ -561,4 +640,69 @@ const validateFactForm = () => {
         return false;
     }
     return true;
+};
+
+const submitFacts = async () => {
+    let ruleID = $('#ruleId').val();
+    $('#mainSpinner').show();
+    $.ajax({
+        url: '/api/v1/rule/'+ruleID,
+        method: 'PUT',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({facts: ruleFacts}),
+        success: function(data){
+            $('#mainSpinner').hide();
+            successToast("Fact saved successfully");
+            ruleModal.hide();
+            loadFacts();
+        },
+        error: function(err){
+            $('#mainSpinner').hide();
+            errorToast("Error saving fact: \n"+err.responseJSON.message);
+        }
+    });
+};
+const loadFacts = async () => {
+    let ruleID = $('#ruleId').val();
+    $('#mainSpinner').show();
+    $.ajax({
+        url: '/api/v1/rule/'+ruleID,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data){
+            $('#mainSpinner').hide();
+            ruleFacts = data.facts;
+            renderFacts();
+        },
+        error: function(err){
+            $('#mainSpinner').hide();
+            console.log(err);
+        }
+    });
+};
+const renderFacts = () => {
+    const template = renderFromTemplate('ruleFactsTemplate', {facts: ruleFacts});
+    $('#ruleFacts').html(template);
+};
+
+const initializeRulePage = () => {
+    let ruleID = $('#ruleId').val();
+    $('#mainSpinner').show();
+    $.ajax({
+        url: '/api/v1/rule/'+ruleID,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data){
+            $('#mainSpinner').hide();
+            ruleOutcomes = data.outcomes;
+            ruleFacts = data.facts;
+            renderRuleConditions();
+            renderFacts();
+        },
+        error: function(err){
+            $('#mainSpinner').hide();
+            console.log(err);
+        }
+    });
 };
