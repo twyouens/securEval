@@ -35,15 +35,31 @@
             </div>
         </div>
         <div class="col-md-7">
-            <p>Example</p>
-            <div class="card requestCard">
-                <div class="card-header requestCardHeader">
-                    <p class="headerText"><span class="fw-bold">POST: </span>http://localhost:3000/api/v1/rule/{{rule._id}}/evaluate</p>
+            <div class="row">
+                <div class="col-12">
+                    <p>Example Request</p>
+                    <div class="card requestCard mb-2">
+                        <div class="card-header requestCardHeader">
+                            <p class="headerText"><span class="fw-bold">POST: </span>http://localhost:3000/api/v1/rule/{{rule._id}}/evaluate</p>
+                        </div>
+                        <div class="card-body requestCardBody">
+                            <pre class="textarea">
+                                {{requestExampleBody}}
+                            </pre>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body requestCardBody">
-                    <pre class="textarea">
-                        {{requestExampleBody}}
-                    </pre>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p>Example Response</p>
+                    <div class="card requestCard">
+                        <div class="card-body requestCardBody">
+                            <pre class="textarea">
+                                {{responseExample}}
+                            </pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
