@@ -22,8 +22,10 @@ apiAuthenticatedRouter.get("/tenant/me", apiAuthenticatedController.getMyTenant)
 apiAuthenticatedRouter.get("/users", apiAuthenticatedController.getTenantUsers);
 apiAuthenticatedRouter.get("/user/:userID", apiAuthenticatedController.getTenantUser);
 
-//tokens
-// apiAuthenticatedRouter.get("/tokens", apiAuthenticatedController.getTokens);
+//apps
+apiAuthenticatedRouter.get("/apps", apiAuthenticatedController.getApps);
+apiAuthenticatedRouter.post("/apps", apiAuthenticatedController.createApp);
+apiAuthenticatedRouter.get("/app/:appID", apiAuthenticatedController.getApp);
 
 
 module.exports = apiAuthenticatedRouter;
