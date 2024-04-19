@@ -467,7 +467,7 @@ const validateRuleOutcomes = () => {
                     appendInputError(`condition/${outcome}/${conditionType}/${i}/fact`, "Invalid fact. Please select Fact.");
                     errors.push({input: "conditions", message: "Invalid fact", conditionType: conditionType, conditionInput: condition.fact});
                 }
-                if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9_-']+)$/.test(condition.value))){
+                if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9\'_-]+)$/.test(condition.value))){
                     appendInputError(`condition/${outcome}/${conditionType}/${i}/value`, "Invalid value. Please select Value.");
                     errors.push({input: "conditions", message: "Invalid value", conditionType: conditionType, conditionInput: condition.value});
                 }
@@ -640,6 +640,31 @@ const validateFactForm = () => {
         return false;
     }
     return true;
+};
+
+const modalDeleteFact = (factID) => {
+    let fact = ruleFacts[ruleFacts.findIndex(fact => fact._id === factID)];
+    if(!fact){
+        errorToast("Fact could not be found.");
+        return;
+    }
+    let modalBody = renderFromTemplate("ruleFactDeleteModal", {fact: fact});
+    $('#ruleModalBody').html(modalBody);
+    $('#ruleModalTitle').text("Delete Fact");
+    initializeRuleModal();
+    ruleModal.show();
+}
+
+const deleteFact = (factID) => {
+    let factIndex = ruleFacts.findIndex(fact => fact._id === factID);
+    if(factIndex === -1){
+        errorToast("Fact could not be found.")
+        return;
+    }
+    ruleFacts.splice(factIndex, 1);
+    successToast("Fact deleted successfully")
+    ruleModal.hide();
+    submitFacts();
 };
 
 const submitFacts = async () => {
