@@ -3,6 +3,7 @@ const Coordinator = require('../engine/coordinator');
 const Parser = require('../engine/parser');
 const User = require('../models/user.model');
 const Tenant = require('../models/tenant.model');
+const App = require('../models/app.model');
 const {checkEvalRequestFacts} = require('../helpers/request.helper');
 const {validateRuleForm} = require('../helpers/formValidators.helper');
 
@@ -137,6 +138,37 @@ async function getRuleFact (req, res, next) {
     }
     res.json(fact);
 }
+
+const getApps = async (req, res, next) => {
+    const apps = await App.find({tenant: req.session.tenant._id});
+    res.json(apps);
+};
+
+const getApp = async (req, res, next) => {
+    const appID = req.params.appID;
+    const app = await App.findOne({_id: appID, tenant: req.session.tenant._id});
+    if(!app){
+        return res.status(404).json({message: 'App not found'});
+    }
+    res.json(app);
+}
+
+const createApp = async (req, res, next) => {
+    const newApp = {
+        name: req.body.name,
+        description: req.body.description,
+        tenant: req.session.tenant._id,
+        website: req.body.website,
+    };
+    const app = new App(newApp);
+    try {
+        await app.save();
+        res.json(app);
+    } catch (err) {
+        req.log.error({err: err, detail: "Error saving app", data: {newApp: newApp}}, "Internal Server Error");
+        next(err);
+    }
+}
     
 
 
@@ -150,5 +182,8 @@ module.exports = {
     getTenantUsers,
     getTenantUser,
     updateRule,
-    getRuleFact
+    getRuleFact,
+    getApps,
+    getApp,
+    createApp
 };
