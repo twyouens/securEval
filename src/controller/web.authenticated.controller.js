@@ -24,9 +24,19 @@ async function manageRule (req, res) {
     res.render("rule",{session: req.session, rule: rule});
 }
 
+async function setupRule (req, res) {
+    const ruleID = req.params.ruleID;
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id});
+    if(!rule){
+        return res.status(404).render('404');
+    }
+    res.render("setup-rule",{session: req.session, rule: rule});
+}
+
 module.exports = {
     home,
     logout,
     rules,
-    manageRule
+    manageRule,
+    setupRule
 };
