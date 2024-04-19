@@ -58,7 +58,7 @@ body{
   background-color: black;
 }
 .requestCard .requestCardBody{
-  margin: 10px;
+  margin: 5px 0px 0px 10px;
 }
 .requestCard .requestCardHeader{
   background-color: #575757;
