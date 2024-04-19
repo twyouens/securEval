@@ -33,7 +33,7 @@
                         <td>{{this.source}}</td>
                         <td>
                             <button type="button" class="btn btn-brand" onclick="javascript: modalRuleFact('{{this._id}}');">Edit</button>
-                            <button type="button" class="btn btn-danger">Delete</button
+                            <button type="button" class="btn btn-danger" onclick="javascript: modalDeleteFact('{{this._id}}')">Delete</button
                         </td>
                     </tr>
                 {{/each}}
@@ -44,3 +44,4 @@
     {{/if}}
 </script>    
 <%- include('./modal-rule-fact'); %>
+<%- include('./modal-rule-fact-delete'); %>
