@@ -23,7 +23,7 @@ const RuleSchema = new Schema({
     tenant: { type: Schema.Types.ObjectId, ref: 'Tenant', required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    targets: [{ type: String, required: false }], 
+    targets: [{ type: Schema.Types.ObjectId, ref: 'App', required: true}], 
     facts: [{
         name: { type: String, required: true },
         value: { type: Schema.Types.Mixed, required: false },
