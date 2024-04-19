@@ -1,0 +1,51 @@
+<script id="setupRuleDeployTemplate" type="text/x-handlebars-template">
+    <hr>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="mb-3">
+                <label for="deployRuleID" class="form-label">Rule ID</label>
+                <input type="text" id="deployRuleID" class="form-control" value="{{rule._id}}" disabled readonly>
+            </div>
+            <div class="mb-3">
+                <label for="deployAppID" class="form-label">App ID</label>
+                <input type="text" id="deployAppID" class="form-control" value="{{app._id}}" disabled readonly>
+            </div>
+            <div class="mb-3">
+                <p>Request Facts</p>
+                {{#if (compare requestFacts.length '>' 0)}}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each requestFacts}}
+                                <tr>
+                                    <td>{{this.name}}</td>
+                                    <td>{{this.type}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                {{else}}
+                    <p>No reqest facts!</p>
+                {{/if}}
+            </div>
+        </div>
+        <div class="col-md-7">
+            <p>Example</p>
+            <div class="card requestCard">
+                <div class="card-header requestCardHeader">
+                    <p class="headerText"><span class="fw-bold">POST: </span>http://localhost:3000/api/v1/rule/{{rule._id}}/evaluate</p>
+                </div>
+                <div class="card-body requestCardBody">
+                    <pre class="textarea">
+                        {{requestExampleBody}}
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
