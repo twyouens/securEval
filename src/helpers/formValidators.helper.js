@@ -66,7 +66,7 @@ function validateRuleForm(requestBody){
                     if(!(/^(request|static)-([a-zA-Z][a-zA-Z0-9_-]*)$/.test(condition.fact))){
                         errors.push({input: "conditions", message: "Invalid fact", conditionType: conditionType, conditionInput: condition.fact});
                     }
-                    if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9_-]+)$/.test(condition.value))){
+                    if(!(/^(\[((request|static)-[a-zA-Z0-9_-]+)\]|[a-zA-Z0-9\'_-]+)$/.test(condition.value))){
                         errors.push({input: "conditions", message: "Invalid value", conditionType: conditionType, conditionInput: condition.value});
                     }
                     const validOperators = ['equal', 'notEqual', 'greaterThan', 'lessThan', 'contains'];
