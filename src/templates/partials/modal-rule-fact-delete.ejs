@@ -1,0 +1,11 @@
+<script id="ruleFactDeleteModal" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-12">
+            <p>Are you sure you want to delete the following Fact:</p>
+            <p><span class="fw-medium fs-5">{{fact.name}}</span><span class="ms-4">{{fact.source}}-{{fact.type}}</span></p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-danger" onclick="javascript: deleteFact('{{fact._id}}');">Delete</button>
+            </div>
+        </div>
+    </div>
+</script>
