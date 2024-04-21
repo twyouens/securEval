@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+        <title>Setup - SecurEval</title>
+        <link rel="stylesheet" href="/static/login.css">
+    </head>
+    <body>
+        <%- include('./partials/nav-start'); %>
+            <div class="row">
+                <div class="col-12">
+                    <h3>Setup</h3>
+                    <p>Check you're ready to deploy SecurEval to your app with the set up checklist. Click on the rule below to get going. </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <% if (rules.length > 0) { %>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Rule Name</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% rules.forEach(rule => { %>
+                                            <tr>
+                                                <td><%= rule.name %></td>
+                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td>
+                                                    <a href="/setup/rule/<%= rule._id %>" class="btn btn-brand">Setup</a>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <p>No rules found. <a href="/rules">Create a rule</a></p>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <%- include('./partials/modal-rule-new'); %>
+        <%- include('./partials/nav-end'); %>
+        <%- include('./partials/footer'); %>
+    </body>
+</html>
