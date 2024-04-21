@@ -54,8 +54,8 @@ class Parser {
         }
         if (targets.length > 0) {
             targets.forEach(target => {
-                if (typeof target !== 'string') {
-                    throw new Error('Each target in the targets array must be a string (appID).');
+                if (typeof target !== 'object') {
+                    throw new Error('Each target in the targets array must be an object.');
                 }
             });
         }
