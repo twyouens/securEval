@@ -24,13 +24,19 @@ async function manageRule (req, res) {
     res.render("rule",{session: req.session, rule: rule});
 }
 
+async function setup (req, res) {
+    const tenantRules = await Rule.find({tenant: req.session.tenant._id}).select('name description version createdAt updatedAt targets');
+    const moment = require('moment');
+    res.render("setup",{session: req.session, rules: tenantRules, moment: moment});
+}
+
 async function setupRule (req, res) {
     const ruleID = req.params.ruleID;
     const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id});
     if(!rule){
         return res.status(404).render('404');
     }
-    res.render("setup-rule",{session: req.session, rule: rule});
+    res.render("setup-rule",{session: req.session, rule: rule, host: process.env.APP_URL});
 }
 
 module.exports = {
@@ -38,5 +44,6 @@ module.exports = {
     logout,
     rules,
     manageRule,
+    setup,
     setupRule
 };
