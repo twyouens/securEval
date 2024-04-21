@@ -79,3 +79,20 @@ body{
   font-family: 'Courier New', Courier, monospace;
   font-size: 15px;
 }
+
+.status-circle{
+  border-width: 0px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #575757;
+}
+.status-good{
+  background-color: #00FF00;
+}
+.status-bad{
+  background-color: #FF0000;
+}
+.status-pending{
+  background-color: #FFFF00;
+}
