@@ -12,6 +12,7 @@ webAuthenticatedRouter.get("/", webAuthenticatedController.home);
 webAuthenticatedRouter.get("/signout", webAuthenticatedController.logout);
 webAuthenticatedRouter.get("/rules", webAuthenticatedController.rules);
 webAuthenticatedRouter.get("/rule/:ruleID", webAuthenticatedController.manageRule);
+webAuthenticatedRouter.get("/setup", webAuthenticatedController.setup);
 webAuthenticatedRouter.get("/setup/rule/:ruleID", webAuthenticatedController.setupRule);
 
 
