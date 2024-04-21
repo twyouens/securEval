@@ -9,7 +9,7 @@ const {validateRuleForm} = require('../helpers/formValidators.helper');
 
 async function getRule(req, res, next) {
     const ruleID = req.params.ruleID;
-    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id},null,{lean: true});
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id},null,{lean: true}).populate('targets');
     if(!rule){
         return res.status(404).json({message: 'Rule not found'});
     }
@@ -25,7 +25,7 @@ async function getRules(req, res, next) {
 
 async function evaluateRule(req, res, next) {
     const ruleID = req.params.ruleID;
-    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id},null,{lean: true});
+    const rule = await Rule.findOne({_id: ruleID, tenant: req.session.tenant._id},null,{lean: true}).populate('targets');
     if(!rule){
         return res.status(404).json({message: 'Rule not found'});
     }
